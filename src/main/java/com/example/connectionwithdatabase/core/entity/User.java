@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
@@ -12,25 +14,31 @@ import javax.persistence.*;
 public class User{
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)//Le indicamos que este campo es clave principal
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//Le indicamos que este campo es clave principal
     private Long id;
 
-    @Column (length = 50)
+    @Column(length = 50)
+    @NotEmpty(message = "Field empty!")
     private String name;
 
+    @NotEmpty
     private String surname;
 
+    @Column(name = "username", nullable = false, length = 50, unique = true)
+    @NotEmpty
+    private String username;
 
-    @Column (name = "email", nullable = false, length = 50, unique = true)
+    @NotEmpty
+    private String password;
+
+    @Column(name = "email", nullable = false, length = 50, unique = true)
+    @NotEmpty
+    @Email
     private String email;
 
     private boolean enabled;
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    @OneToOne(cascade= CascadeType.ALL)
+    @JoinColumn(name = "fk_userDetail")
+    private UserDetail userDetail;
 }

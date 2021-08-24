@@ -58,7 +58,6 @@ public class UserController {
     //Delete a user
     @DeleteMapping({"/{id}"})
     public ResponseEntity<?> delete (@PathVariable Long id) {
-
         if(!userService.findById(id).isPresent()){
             return ResponseEntity.notFound().build();
         }
@@ -72,4 +71,11 @@ public class UserController {
         List<User> users = StreamSupport.stream(userService.findAll().spliterator(),false).collect(Collectors.toList());
         return users;
     }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestParam String filter){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.search(filter));
+    }
+
 }
